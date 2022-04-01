@@ -1,6 +1,7 @@
 package cfrouter
 
 import (
+	"log"
 	"net/http"
 )
 
@@ -26,6 +27,10 @@ func (cfr *CfRouter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, route := range cfr.routes {
+		if route.err != nil {
+			log.Panic(route.err)
+		}
+
 		if path == route.path && route.methods[r.Method] {
 			for i := len(cfr.middlewares) - 1; i >= 0; i-- {
 				if i == len(cfr.middlewares)-1 {
